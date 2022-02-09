@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
-import { getEvents } from "./EventManager.js"
+import { deleteEvent, getEvents, joinEvent, leaveEvent } from "./EventManager.js"
 
 export const EventList = (props) => {
     const [events, setEvents] = useState([])
@@ -25,6 +25,17 @@ export const EventList = (props) => {
                         {event.description}
 
                         {event.date} at {event.time}
+
+                        {
+                            event.joined ? <button onClick={() => { leaveEvent(event.id).then(res => setEvents(res))}}>Leave</button> : <button onClick={() => { joinEvent(event.id).then(res => setEvents(res))}}>Join</button>
+                        }
+                        <button onClick={() => {
+                    history.push({ pathname: `/events/${event.id}/update`})
+                        }}>Edit</button>
+                        <button onClick={() => {
+                    deleteEvent(event, event.id)
+                    .then(res => setEvents(res))
+                        }}>EXTERMINATE</button>
                     </section>
                 )
             })}
